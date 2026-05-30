@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Clock App</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f172a,#1e293b,#334155);
+  color:white;
+}
+
+.container{
+  width:380px;
+  padding:30px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 8px 30px rgba(0,0,0,0.3);
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.clock{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.time{
+  font-size:55px;
+  font-weight:bold;
+}
+
+.date{
+  color:#cbd5e1;
+  margin-top:8px;
+}
+
+.section{
+  margin-top:20px;
+}
+
+.section h2{
+  font-size:18px;
+  margin-bottom:10px;
+}
+
+input,select,button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  margin-top:10px;
+  font-size:16px;
+}
+
+button{
+  background:#0dcc4d;
+  color:rgb(243, 13, 13);
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#e90e86;
+}
+
+.alarm-status{
+  margin-top:10px;
+  text-align:center;
+  color:#0dd2e0;
+}
+
+.world-clock{
+  margin-top:10px;
+  padding:10px;
+  background:rgba(27, 1, 1, 0.05);
+  border-radius:10px;
+}
+
+.city{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Modern Clock</h1>
+
+  <!-- Main Clock -->
+  <div class="clock">
+    <div class="time" id="time">00:00:00</div>
+    <div class="date" id="date">Loading...</div>
+  </div>
+
+  <!-- Alarm -->
+  <div class="section">
+    <h2>Set Alarm</h2>
+
+    <input type="time" id="alarmTime">
+
+    <button onclick="setAlarm()">Set Alarm</button>
+
+    <div class="alarm-status" id="alarmStatus">
+      No Alarm Set
+    </div>
+  </div>
+
+  <!-- World Clock -->
+  <div class="section">
+    <h2>World Clock</h2>
+
+    <div class="world-clock">
+
+      <div class="city">
+        <span>New York</span>
+        <span id="newyork"></span>
+      </div>
+
+      <div class="city">
+        <span>London</span>
+        <span id="london"></span>
+      </div>
+
+      <div class="city">
+        <span>Tokyo</span>
+        <span id="tokyo"></span>
+      </div>
+
+      <div class="city">
+        <span>India</span>
+        <span id="india"></span>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+let alarmTime = null;
+
+// Main Clock
+function updateClock(){
+
+  const now = new Date();
+
+  // Main Time
+  const time = now.toLocaleTimeString();
+  document.getElementById("time").innerHTML = time;
+
+  // Date
+  const options = {
+    weekday:'long',
+    year:'numeric',
+    month:'long',
+    day:'numeric'
+  };
+
+  document.getElementById("date").innerHTML =
+    now.toLocaleDateString('en-US', options);
+
+  // Alarm Check
+  const currentHour = String(now.getHours()).padStart(2,'0');
+  const currentMinute = String(now.getMinutes()).padStart(2,'0');
+
+  const currentTime = `${currentHour}:${currentMinute}`;
+
+  if(alarmTime === currentTime){
+    alert("⏰ Alarm Ringing!");
+    alarmTime = null;
+  }
+
+  // World Clock
+  updateWorldClock();
+}
+
+// Set Alarm
+function setAlarm(){
+
+  alarmTime = document.getElementById("alarmTime").value;
+
+  if(alarmTime){
+    document.getElementById("alarmStatus").innerHTML =
+      `Alarm Set for ${alarmTime}`;
+  }
+}
+
+// World Clock Function
+function updateWorldClock(){
+
+  const options = {
+    hour:'2-digit',
+    minute:'2-digit',
+    second:'2-digit'
+  };
+
+  document.getElementById("newyork").innerHTML =
+    new Date().toLocaleTimeString('en-US',{
+      timeZone:'America/New_York'
+    });
+
+  document.getElementById("london").innerHTML =
+    new Date().toLocaleTimeString('en-GB',{
+      timeZone:'Europe/London'
+    });
+
+  document.getElementById("tokyo").innerHTML =
+    new Date().toLocaleTimeString('ja-JP',{
+      timeZone:'Asia/Tokyo'
+    });
+
+  document.getElementById("india").innerHTML =
+    new Date().toLocaleTimeString('en-IN',{
+      timeZone:'Asia/Kolkata'
+    });
+}
+
+setInterval(updateClock,1000);
+
+updateClock();
+
+</script>
+
+</body>
+</html>
